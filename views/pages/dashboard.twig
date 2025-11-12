@@ -27,8 +27,8 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Prénom</th>
                         <th>Nom</th>
+                        <th>Prénom</th>
                         <th>Ordinateur attribué</th>
                         <th>Actions</th>
                     </tr>
@@ -103,7 +103,7 @@
                                 </td>
                                 <td>
                                     {% if computer.employee %}
-                                        {{ computer.employee.nom }} {{ computer.employee.prenom }}
+                                        {{ computer.employee.prenom }} {{ computer.employee.nom }}
                                     {% else %}
                                         <span class="no-data">Non attribué</span>
                                     {% endif %}
@@ -141,12 +141,12 @@
             </div>
             <form method="POST" action="/employees">
                 <div class="form-group">
-                    <label for="nom">Prénom *</label>
+                    <label for="nom">Nom *</label>
                     <input type="text" id="nom" name="nom" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="prenom">Nom *</label>
+                    <label for="prenom">Prénom *</label>
                     <input type="text" id="prenom" name="prenom" required>
                 </div>
 
