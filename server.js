@@ -25,6 +25,13 @@ app.use(session({
 app.set('view engine', 'twig');
 app.set('views', path.join(__dirname, 'views'));
 
+// Désactiver le cache Twig en développement
+app.set('twig options', {
+  autoescape: true,
+  cache: false, // Désactive le cache en développement
+  strict_variables: false
+});
+
 // Fichiers statiques (CSS, JS, images)
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
