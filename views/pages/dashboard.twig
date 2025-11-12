@@ -27,8 +27,8 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Nom</th>
                         <th>Prénom</th>
+                        <th>Nom</th>
                         <th>Ordinateur attribué</th>
                         <th>Actions</th>
                     </tr>
@@ -37,8 +37,8 @@
                     {% if employees|length > 0 %}
                         {% for employee in employees %}
                             <tr>
-                                <td>{{ employee.nom }}</td>
                                 <td>{{ employee.prenom }}</td>
+                                <td>{{ employee.nom }}</td>
                                 <td>
                                     {% if employee.computer %}
                                         MAC: {{ employee.computer.macAddress }}
@@ -141,13 +141,13 @@
             </div>
             <form method="POST" action="/employees">
                 <div class="form-group">
-                    <label for="nom">Nom *</label>
-                    <input type="text" id="nom" name="nom" required>
+                    <label for="prenom">Prénom *</label>
+                    <input type="text" id="prenom" name="prenom" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="prenom">Prénom *</label>
-                    <input type="text" id="prenom" name="prenom" required>
+                    <label for="nom">Nom *</label>
+                    <input type="text" id="nom" name="nom" required>
                 </div>
 
                 <div class="form-group">
@@ -194,13 +194,13 @@
                 <input type="hidden" id="edit-employee-id" name="employeeId">
 
                 <div class="form-group">
-                    <label for="edit-nom">Nom *</label>
-                    <input type="text" id="edit-nom" name="nom" required>
+                    <label for="edit-prenom">Prénom *</label>
+                    <input type="text" id="edit-prenom" name="prenom" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="edit-prenom">Prénom *</label>
-                    <input type="text" id="edit-prenom" name="prenom" required>
+                    <label for="edit-nom">Nom *</label>
+                    <input type="text" id="edit-nom" name="nom" required>
                 </div>
 
                 <div class="form-group">
