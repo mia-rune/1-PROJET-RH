@@ -1,5 +1,5 @@
-require('dotenv').config();
 const express = require('express');
+require('dotenv').config(); //process.env.NOMDELAVARIABLE pour appeler une variable
 const session = require('express-session');
 const path = require('path');
 
