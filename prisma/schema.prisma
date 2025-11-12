@@ -1,0 +1,68 @@
+// Schema Prisma pour l'application Big Boss RH
+// Genere automatiquement - Ne pas modifier manuellement
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Modèle pour les entreprises (chefs d'entreprise)
+model Company {
+  id            Int      @id @default(autoincrement())
+  raisonSociale String   @db.VarChar(255)
+  siret         String   @unique @db.VarChar(14)
+  password      String   @db.VarChar(255)
+  nomDirecteur  String?  @db.VarChar(255)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  employees     Employee[]
+  computers     Computer[]
+
+  @@map("companies")
+}
+
+// Modèle pour les ordinateurs
+model Computer {
+  id          Int      @id @default(autoincrement())
+  macAddress  String   @db.VarChar(17)
+  statut      String   @default("disponible") @db.VarChar(20)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  companyId   Int
+  company     Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  employeeId  Int?     @unique
+  employee    Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+
+  @@map("computers")
+}
+
+// Modèle pour les employés
+model Employee {
+  id        Int      @id @default(autoincrement())
+  nom       String   @db.VarChar(255)
+  prenom    String   @db.VarChar(255)
+  email     String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  age       Int?
+  genre     String?  @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  computer  Computer?
+
+  @@map("employees")
+}
+

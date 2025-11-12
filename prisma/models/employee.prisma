@@ -1,0 +1,20 @@
+// Modèle pour les employés
+model Employee {
+  id        Int      @id @default(autoincrement())
+  nom       String   @db.VarChar(255)
+  prenom    String   @db.VarChar(255)
+  email     String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  age       Int?
+  genre     String?  @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  computer  Computer?
+
+  @@map("employees")
+}

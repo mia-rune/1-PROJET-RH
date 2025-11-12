@@ -1,0 +1,310 @@
+{% include 'partials/header.twig' with {'title': 'ManageRH - Tableau de bord'} %}
+
+<main>
+    <div class="dashboard-header">
+        <h2>Bienvenue, {{ raisonSociale }}</h2>
+        <a href="/logout" class="btn btn-secondary">Se déconnecter</a>
+    </div>
+
+    {% if error == 'employee_already_has_computer' %}
+        <div class="alert alert-error">
+            Cet employé a déjà un ordinateur attribué.
+        </div>
+    {% elseif error == 'invalid_mac_address' %}
+        <div class="alert alert-error">
+            Format d'adresse MAC invalide. Utilisez le format AA:BB:CC:DD:EE:FF ou AA-BB-CC-DD-EE-FF.
+        </div>
+    {% endif %}
+
+    <!-- Section Employés -->
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h3>Employés</h3>
+            <button id="btn-add-employee" class="btn btn-primary">+ Ajouter un employé</button>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Ordinateur attribué</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if employees|length > 0 %}
+                        {% for employee in employees %}
+                            <tr>
+                                <td>{{ employee.nom }}</td>
+                                <td>{{ employee.prenom }}</td>
+                                <td>
+                                    {% if employee.computer %}
+                                        MAC: {{ employee.computer.macAddress }}
+                                    {% else %}
+                                        <span class="no-data">Aucun ordinateur</span>
+                                    {% endif %}
+                                </td>
+                                <td class="actions-cell">
+                                    <button class="btn-icon btn-edit" title="Modifier" data-employee-id="{{ employee.id }}">
+                                        <img src="/public/assets/imgs/editer.png" alt="Modifier">
+                                    </button>
+                                    <form method="POST" action="/employees/{{ employee.id }}/delete" style="display:inline;">
+                                        <button type="submit" class="btn-icon btn-delete" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?')">
+                                            <img src="/public/assets/imgs/supprimer.png" alt="Supprimer">
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 2rem;">
+                                <span class="no-data">Aucun employé pour le moment. Cliquez sur "Ajouter un employé" pour commencer.</span>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Section Ordinateurs -->
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h3>Ordinateurs</h3>
+            <button id="btn-add-computer" class="btn btn-primary">+ Ajouter un ordinateur</button>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Adresse MAC</th>
+                        <th>Statut</th>
+                        <th>Employé attribué</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if computers|length > 0 %}
+                        {% for computer in computers %}
+                            <tr>
+                                <td>{{ computer.macAddress }}</td>
+                                <td>
+                                    {% if computer.statut == 'en panne' %}
+                                        <span class="status-badge status-broken">En panne</span>
+                                    {% elseif computer.employee %}
+                                        <span class="status-badge status-assigned">Attribué</span>
+                                    {% else %}
+                                        <span class="status-badge status-available">Disponible</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if computer.employee %}
+                                        {{ computer.employee.nom }} {{ computer.employee.prenom }}
+                                    {% else %}
+                                        <span class="no-data">Non attribué</span>
+                                    {% endif %}
+                                </td>
+                                <td class="actions-cell">
+                                    <button class="btn-icon btn-edit-computer" title="Modifier" data-computer-id="{{ computer.id }}">
+                                        <img src="/public/assets/imgs/editer.png" alt="Modifier">
+                                    </button>
+                                    <form method="POST" action="/computers/{{ computer.id }}/delete" style="display:inline;">
+                                        <button type="submit" class="btn-icon btn-delete" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet ordinateur ?')">
+                                            <img src="/public/assets/imgs/supprimer.png" alt="Supprimer">
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 2rem;">
+                                <span class="no-data">Aucun ordinateur pour le moment. Cliquez sur "Ajouter un ordinateur" pour commencer.</span>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Modal Ajouter un employé -->
+    <div id="modal-add-employee" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Ajouter un employé</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form method="POST" action="/employees">
+                <div class="form-group">
+                    <label for="nom">Nom *</label>
+                    <input type="text" id="nom" name="nom" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prenom">Prénom *</label>
+                    <input type="text" id="prenom" name="prenom" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe *</label>
+                    <input type="password" id="password" name="password" required minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Âge</label>
+                    <input type="number" id="age" name="age" min="16" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="genre">Genre</label>
+                    <select id="genre" name="genre">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="Homme">Homme</option>
+                        <option value="Femme">Femme</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-cancel">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Modifier un employé -->
+    <div id="modal-edit-employee" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Modifier l'employé</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form method="POST" id="form-edit-employee">
+                <input type="hidden" id="edit-employee-id" name="employeeId">
+
+                <div class="form-group">
+                    <label for="edit-nom">Nom *</label>
+                    <input type="text" id="edit-nom" name="nom" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-prenom">Prénom *</label>
+                    <input type="text" id="edit-prenom" name="prenom" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-email">Email *</label>
+                    <input type="email" id="edit-email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-password">Nouveau mot de passe</label>
+                    <input type="password" id="edit-password" name="password" minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-age">Âge</label>
+                    <input type="number" id="edit-age" name="age" min="16" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-genre">Genre</label>
+                    <select id="edit-genre" name="genre">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="Homme">Homme</option>
+                        <option value="Femme">Femme</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-cancel">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ajouter un ordinateur -->
+    <div id="modal-add-computer" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Ajouter un ordinateur</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form method="POST" action="/computers">
+                <div class="form-group">
+                    <label for="macAddress">Adresse MAC *</label>
+                    <input type="text" id="macAddress" name="macAddress" pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" title="Format: AA:BB:CC:DD:EE:FF ou AA-BB-CC-DD-EE-FF" placeholder="AA-BB-CC-DD-EE-FF" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-cancel">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Modifier un ordinateur -->
+    <div id="modal-edit-computer" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Modifier l'ordinateur</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form method="POST" id="form-edit-computer">
+                <input type="hidden" id="edit-computer-id" name="computerId">
+
+                <div class="form-group">
+                    <label for="edit-macAddress">Adresse MAC *</label>
+                    <input type="text" id="edit-macAddress" name="macAddress" pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" title="Format: AA:BB:CC:DD:EE:FF ou AA-BB-CC-DD-EE-FF" placeholder="AA:BB:CC:DD:EE:FF" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-employeeId">Attribuer à un employé</label>
+                    <select id="edit-employeeId" name="employeeId">
+                        <option value="">-- Non attribué --</option>
+                        {% for employee in employees %}
+                            <option value="{{ employee.id }}">{{ employee.prenom }} {{ employee.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-statut">Statut</label>
+                    <select id="edit-statut" name="statut">
+                        <option value="disponible">Disponible</option>
+                        <option value="attribué">Attribué</option>
+                        <option value="en panne">En panne</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-cancel">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Passer les données au JavaScript
+    const employeesData = {{ employees|json_encode|raw }};
+    const computersData = {{ computers|json_encode|raw }};
+</script>
+<script src="/public/js/dashboard.js"></script>
+
+{% include 'partials/footer.twig' %}

@@ -1,0 +1,27 @@
+{
+  "name": "projet-rh",
+  "version": "1.0.0",
+  "description": "projet RH monobloc avec node.js",
+  "license": "ISC",
+  "author": "MD",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "build:schema": "node scripts/build-schema.js",
+    "db:generate": "npm run build:schema && npx prisma generate",
+    "db:migrate": "npm run build:schema && npx prisma migrate dev",
+    "dev": "nodemon --ext js,twig,css server.js",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.16.2",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "multer": "^2.0.2",
+    "prisma": "^6.16.2",
+    "twig": "^1.17.1"
+  }
+}

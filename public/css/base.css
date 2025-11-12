@@ -1,0 +1,22 @@
+/* Base styles et reset */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&family=Poppins:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'quicksand', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #e8f4f8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,66 @@
+/* Layout - Structure de la page */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    background: #1f7a8c;
+    color: white;
+    padding: 32px 0;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 6px rgba(0, 102, 204, 0.3);
+}
+
+header h1 {
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+
+header h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+
+header p {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+/* Main content */
+main {
+    background: white;
+    padding: 32px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 32px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 32px 0;
+    color: #7f8c8d;
+    border-top: 1px solid #ecf0f1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 32px;
+    }
+
+    main {
+        padding: 16px;
+    }
+}

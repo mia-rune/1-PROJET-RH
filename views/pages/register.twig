@@ -1,0 +1,43 @@
+{% include 'partials/header.twig' with {'title': 'ManageRH - Inscription'} %}
+
+<main>
+    <div class="form-container">
+        <h2>Inscription</h2>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form action="/register" method="POST">
+            <div class="form-group">
+                <label for="raisonSociale">Raison sociale *</label>
+                <input type="text" id="raisonSociale" name="raisonSociale" required>
+            </div>
+
+            <div class="form-group">
+                <label for="siret">N° de Siret *</label>
+                <input type="text" id="siret" name="siret" pattern="[0-9]{14}" title="Le SIRET doit contenir 14 chiffres" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe *</label>
+                <input type="password" id="password" name="password" pattern="^(?=.*[0-9]).{8,}$" title="Le mot de passe doit contenir au moins 8 caractères dont 1 chiffre" required>
+            </div>
+
+            <div class="form-group">
+                <label for="directeur">Nom du directeur (optionnel)</label>
+                <input type="text" id="directeur" name="directeur">
+            </div>
+
+            <div style="text-align: center;">
+                <button type="submit" class="btn btn-primary">S'inscrire</button>
+            </div>
+        </form>
+
+        <p class="form-footer">
+            Vous avez déjà un compte ? <a href="/login">Se connecter</a>
+        </p>
+    </div>
+</main>
+
+{% include 'partials/footer.twig' %}

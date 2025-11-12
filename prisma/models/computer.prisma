@@ -1,0 +1,17 @@
+// Modèle pour les ordinateurs
+model Computer {
+  id          Int      @id @default(autoincrement())
+  macAddress  String   @db.VarChar(17)
+  statut      String   @default("disponible") @db.VarChar(20)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  companyId   Int
+  company     Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  employeeId  Int?     @unique
+  employee    Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+
+  @@map("computers")
+}

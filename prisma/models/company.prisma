@@ -1,0 +1,16 @@
+// Modèle pour les entreprises (chefs d'entreprise)
+model Company {
+  id            Int      @id @default(autoincrement())
+  raisonSociale String   @db.VarChar(255)
+  siret         String   @unique @db.VarChar(14)
+  password      String   @db.VarChar(255)
+  nomDirecteur  String?  @db.VarChar(255)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  employees     Employee[]
+  computers     Computer[]
+
+  @@map("companies")
+}
